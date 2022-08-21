@@ -9,7 +9,8 @@ class App extends React.Component {
       this.state = {
         task: {
           text: '',
-          id: uniqid()
+          id: uniqid(),
+          number: 1,
         },
         tasks: [],
       }
@@ -20,6 +21,7 @@ class App extends React.Component {
       task: {
         text: e.target.value,
         id: this.state.task.id,
+        number: this.state.tasks.length + 1,
       },
     })
   }
@@ -32,14 +34,26 @@ class App extends React.Component {
       task: {
         text: '',
         id: uniqid(),
+        number: this.state.tasks.length + 2, 
       },
+    })
+  }
+
+  handleDelete = (deleted) => {
+    this.setState({
+      tasks: this.state.tasks.filter(task => task !== deleted),
+      task: this.state.task,
+      number: this.state.number,
+    })
+
+    this.state.tasks.forEach(task => {
+      task.number = this.state.tasks.indexOf(task) + 1;
     })
   }
 
 
   render() {
     const { task, tasks } = this.state;
-
       return (
           <div>
             <form onSubmit={this.handleSubmit}>
@@ -52,7 +66,7 @@ class App extends React.Component {
               />  
               <button type="submit">Add Task</button>
             </form>
-            <Tasks tasks={tasks}/>
+            <Tasks tasks={tasks} deleteBtn={this.handleDelete}/>
           </div>
       )
   }
